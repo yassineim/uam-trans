@@ -1,0 +1,28 @@
+{
+  "name": "uam-trans",
+  "version": "0.0.2-SNAPSHOT",
+  "description": "UMA Transporter - Make transport of new files to a configured location",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:yassineim/uam-trans"
+  },
+  "dependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "css-loader": "^3.2.0",
+    "node-fetch": "^2.6.0",
+    "react": "^16.5.2",
+    "react-dom": "^16.5.2",
+    "react-table": "^6.10.0"
+  },
+  "scripts": {
+    "watch": "webpack --watch -d"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.1.0",
+    "@babel/preset-env": "^7.1.0",
+    "@babel/preset-react": "^7.0.0",
+    "babel-loader": "^8.0.2",
+    "webpack": "^4.19.1",
+    "webpack-cli": "^3.1.0"
+  }
+}

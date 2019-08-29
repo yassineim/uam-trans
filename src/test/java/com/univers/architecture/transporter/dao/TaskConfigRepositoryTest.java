@@ -42,5 +42,4 @@ public class TaskConfigRepositoryTest {
 		this.taskExecutionRepository.save(task1);
 		assertTrue(task1.getId() != null);
 	}
-
 }
