@@ -33222,6 +33222,15 @@ function (_React$Component3) {
   }
 
   _createClass(TaskExecutionList, [{
+    key: "serializeToQueryString",
+    value: function serializeToQueryString(arrayOfFilters) {
+      var str = [];
+      arrayOfFilters.forEach(function (filter) {
+        return str.push(encodeURIComponent(filter.id) + "=" + encodeURIComponent(filter.value));
+      });
+      return str.join("&");
+    }
+  }, {
     key: "render",
     value: function render() {
       var _this4 = this;
@@ -33231,10 +33240,32 @@ function (_React$Component3) {
         accessor: 'taskConfigName'
       }, {
         Header: 'Duration',
-        accessor: 'durationInSeconds'
+        accessor: 'durationInSeconds',
+        filterable: false
       }, {
         Header: 'Status',
-        accessor: 'status'
+        accessor: 'status',
+        Filter: function Filter(_ref) {
+          var filter = _ref.filter,
+              _onChange = _ref.onChange;
+          return React.createElement("select", {
+            onChange: function onChange(event) {
+              return _onChange(event.target.value);
+            },
+            style: {
+              width: "100%"
+            },
+            value: filter ? filter.value : ""
+          }, React.createElement("option", {
+            value: ""
+          }, "All"), React.createElement("option", {
+            value: "STARTED"
+          }, "STARTED"), React.createElement("option", {
+            value: "SUCCESS"
+          }, "SUCCESS"), React.createElement("option", {
+            value: "ERROR"
+          }, "ERROR"));
+        }
       }, {
         Header: 'Transported files',
         accessor: 'transportedFiles'
@@ -33245,29 +33276,71 @@ function (_React$Component3) {
         Header: 'Email error sent',
         id: 'emailErrorSent',
         accessor: function accessor(d) {
-          return d.emailErrorSent ? "YES" : "NO";
+          return d.emailErrorSent ? "Yes" : "No";
+        },
+        Filter: function Filter(_ref2) {
+          var filter = _ref2.filter,
+              _onChange2 = _ref2.onChange;
+          return React.createElement("select", {
+            onChange: function onChange(event) {
+              return _onChange2(event.target.value);
+            },
+            style: {
+              width: "100%"
+            },
+            value: filter ? filter.value : ""
+          }, React.createElement("option", {
+            value: ""
+          }, "Both"), React.createElement("option", {
+            value: "true"
+          }, "Yes"), React.createElement("option", {
+            value: "false"
+          }, "No"));
         }
       }, {
         Header: 'Start date',
-        accessor: 'startDate'
+        accessor: 'startDate',
+        filterable: false
       }, {
         Header: 'End date',
-        accessor: 'endDate'
+        accessor: 'endDate',
+        filterable: false
       }, {
         Header: 'In progress copy detected',
         id: 'inProgressCopyDetected',
         accessor: function accessor(d) {
-          return d.inProgressCopyDetected ? "YES" : "NO";
+          return d.inProgressCopyDetected ? "Yes" : "No";
+        },
+        Filter: function Filter(_ref3) {
+          var filter = _ref3.filter,
+              _onChange3 = _ref3.onChange;
+          return React.createElement("select", {
+            onChange: function onChange(event) {
+              return _onChange3(event.target.value);
+            },
+            style: {
+              width: "100%"
+            },
+            value: filter ? filter.value : ""
+          }, React.createElement("option", {
+            value: ""
+          }, "Both"), React.createElement("option", {
+            value: "true"
+          }, "Yes"), React.createElement("option", {
+            value: "false"
+          }, "No"));
         }
       }, {
         Header: 'nbrCheckInProgressCopy',
-        accessor: 'nbrCheckInProgressCopy'
+        accessor: 'nbrCheckInProgressCopy',
+        filterable: false
       }];
       return React.createElement(TableWithRefresh, {
         data: this.state.data,
         pages: this.state.pages,
         loading: this.state.loading,
         defaultPageSize: 10,
+        filterable: true,
         columns: columns,
         manual: true,
         onFetchData: function onFetchData(state, instance) {
@@ -33279,6 +33352,10 @@ function (_React$Component3) {
 
           if (state.sorted.length > 0) {
             uri += '&sort=' + state.sorted[0].id + (state.sorted[0].desc ? ',desc' : '');
+          }
+
+          if (state.filtered.length > 0) {
+            uri += '&' + _this4.serializeToQueryString(state.filtered);
           }
 
           console.log(uri);

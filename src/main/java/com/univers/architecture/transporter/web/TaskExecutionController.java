@@ -5,11 +5,15 @@ package com.univers.architecture.transporter.web;
 
 import java.util.List;
 
+import com.querydsl.core.types.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.querydsl.binding.QuerydslPredicate;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.univers.architecture.transporter.model.TaskExecution;
@@ -31,8 +35,9 @@ public class TaskExecutionController {
 		return this.taskExecutionService.getAllTaskExecution();
 	}
 
-	@GetMapping("/pageableTaskExecution")
-	public Page<TaskExecution> getAllTaskExecutions(Pageable pageable) {
-		return this.taskExecutionService.getAllTaskExecution(pageable);
+	@RequestMapping(value = "/pageableTaskExecution")
+	public Page<TaskExecution> index(@QuerydslPredicate(root = TaskExecution.class) Predicate predicate,
+				 Pageable pageable) {
+		return this.taskExecutionService.getAllTaskExecution(predicate, pageable);
 	}
 }

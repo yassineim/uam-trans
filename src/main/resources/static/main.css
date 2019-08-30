@@ -25,3 +25,7 @@ input[type=number] {
     font-weight: normal;
     outline: none;
 }
+
+.ReactTable .rt-thead.-filters select {
+    width: 100%;
+}

@@ -5,6 +5,7 @@ package com.univers.architecture.transporter.service;
 
 import java.util.List;
 
+import com.querydsl.core.types.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +37,8 @@ public class TaskExecutionServiceImpl implements ITaskExecutionService {
 	}
 
 	@Override
-	public Page<TaskExecution> getAllTaskExecution(Pageable pageable) {
-		return this.taskExecutionRepository.findAll(pageable);
+	public Page<TaskExecution> getAllTaskExecution(Predicate predicate, Pageable pageable) {
+		return this.taskExecutionRepository.findAll(predicate, pageable);
 	}
 
 }

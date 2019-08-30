@@ -79,6 +79,14 @@ class TaskExecutionList extends React.Component {
         };
     }
 
+    serializeToQueryString(arrayOfFilters) {
+        const str = [];
+        arrayOfFilters.forEach(filter =>
+            str.push(encodeURIComponent(filter.id) + "=" + encodeURIComponent(filter.value))
+        );
+        return str.join("&");
+    }
+
     render() {
 
         const columns = [{
@@ -86,10 +94,22 @@ class TaskExecutionList extends React.Component {
             accessor: 'taskConfigName'
         }, {
             Header: 'Duration',
-            accessor: 'durationInSeconds'
+            accessor: 'durationInSeconds',
+            filterable: false
         }, {
             Header: 'Status',
-            accessor: 'status'
+            accessor: 'status',
+            Filter: ({ filter, onChange }) =>
+                <select
+                    onChange={event => onChange(event.target.value)}
+                    style={{ width: "100%" }}
+                    value={filter ? filter.value : ""}
+                >
+                    <option value="">All</option>
+                    <option value="STARTED">STARTED</option>
+                    <option value="SUCCESS">SUCCESS</option>
+                    <option value="ERROR">ERROR</option>
+                </select>
         }, {
             Header: 'Transported files',
             accessor: 'transportedFiles'
@@ -99,20 +119,43 @@ class TaskExecutionList extends React.Component {
         }, {
             Header: 'Email error sent',
             id: 'emailErrorSent',
-            accessor: d => d.emailErrorSent ? "YES" : "NO"
+            accessor: d => d.emailErrorSent ? "Yes" : "No",
+            Filter: ({ filter, onChange }) =>
+                <select
+                    onChange={event => onChange(event.target.value)}
+                    style={{ width: "100%" }}
+                    value={filter ? filter.value : ""}
+                >
+                    <option value="">Both</option>
+                    <option value="true">Yes</option>
+                    <option value="false">No</option>
+                </select>
         }, {
             Header: 'Start date',
-            accessor: 'startDate'
+            accessor: 'startDate',
+            filterable: false
         }, {
             Header: 'End date',
-            accessor: 'endDate'
+            accessor: 'endDate',
+            filterable: false
         }, {
             Header: 'In progress copy detected',
             id: 'inProgressCopyDetected',
-            accessor: d => d.inProgressCopyDetected ? "YES" : "NO"
+            accessor: d => d.inProgressCopyDetected ? "Yes" : "No",
+            Filter: ({ filter, onChange }) =>
+                <select
+                    onChange={event => onChange(event.target.value)}
+                    style={{ width: "100%" }}
+                    value={filter ? filter.value : ""}
+                >
+                    <option value="">Both</option>
+                    <option value="true">Yes</option>
+                    <option value="false">No</option>
+                </select>
         }, {
             Header: 'nbrCheckInProgressCopy',
-            accessor: 'nbrCheckInProgressCopy'
+            accessor: 'nbrCheckInProgressCopy',
+            filterable: false
         }];
 
         return <TableWithRefresh
@@ -120,6 +163,7 @@ class TaskExecutionList extends React.Component {
             pages={this.state.pages}
             loading={this.state.loading}
             defaultPageSize={10}
+            filterable={true}
             columns={columns}
             manual
             onFetchData={(state, instance) => {
@@ -130,6 +174,10 @@ class TaskExecutionList extends React.Component {
 
                 if (state.sorted.length > 0) {
                     uri += '&sort=' + state.sorted[0].id + (state.sorted[0].desc ? ',desc' : '');
+                }
+
+                if (state.filtered.length > 0) {
+                    uri += '&' + this.serializeToQueryString(state.filtered);
                 }
 
                 console.log(uri);
